@@ -15,8 +15,11 @@ __author__ = ["Katarina Elez", "Anna Vangone"]
 
 import sys
 import pickle
+import warnings
 
-features = sys.argv[1:]
 
-model = pickle.load(open('classifier.sav', 'rb'))
-print(model.predict([features])[0])
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    features = sys.argv[1:]
+    model = pickle.load(open('classifier.sav', 'rb'))
+    print(model.predict([features])[0])
