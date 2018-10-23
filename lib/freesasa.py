@@ -60,7 +60,7 @@ def execute_freesasa(structure, selection=None):
     # Run freesasa
     # Save atomic asa output to another temp file
     _outf = tempfile.NamedTemporaryFile()
-    cmd = '{0} --B-value-file={1} -c {2} {3}'.format(freesasa, _outf.name, param_f, _pdbf.name)
+    cmd = '{0} {1} --format=pdb --radii=naccess -o {2}'.format(freesasa, _pdbf.name, _outf.name)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
 
