@@ -34,7 +34,11 @@ def freesasa_version():
     cmd = '{0} -v'.format(FREESASA_BIN)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
-    version_raw = (str(stdout, 'utf-8')).split(os.linesep)[0]
+    try:
+        version_raw = (str(stdout, 'utf-8')).split(os.linesep)[0]
+    except:
+        # Python 2.7
+        version_raw = str(stdout).split(os.linesep)[0]
     version = version_raw.replace("FreeSASA ", "")
     major, minor = version.split(".")[:2]
     return int(major), int(minor)
@@ -57,8 +61,7 @@ def execute_freesasa(structure, selection=None):
     try:
         major, minor = freesasa_version()
     except:
-        print('[!] error retrieving freesasa version', file=sys.stderr)
-        raise Exception()
+        raise IOError('[!] error retrieving freesasa version from {0}'.format(freesasa))
 
     if major < 2 and not os.path.isfile(param_f):
         raise IOError('[!] Atomic radii file not found at `{0}`'.format(param_f))
