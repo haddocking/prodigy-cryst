@@ -11,7 +11,7 @@ Biological/crystallographic interface classifier based on Intermolecular Contact
 
 from __future__ import print_function, division
 
-__author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues"]
+__author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues", "Brian Jimenez"]
 
 import os
 import sys
@@ -26,6 +26,7 @@ from lib.freesasa import execute_freesasa
 from lib.utils import _check_path
 from lib.parsers import parse_structure
 from lib import aa_properties
+
 
 def calculate_ic(structure, d_cutoff=5.0, selection=None):
     """
@@ -47,6 +48,7 @@ def calculate_ic(structure, d_cutoff=5.0, selection=None):
         raise ValueError('No contacts found for selection')
 
     return ic_list
+
 
 def analyse_contacts(contact_list):
     """
@@ -71,6 +73,7 @@ def analyse_contacts(contact_list):
         bins[res_j.resname] += 1
 
     return bins
+
 
 if __name__ == "__main__":
 
@@ -165,7 +168,8 @@ if __name__ == "__main__":
     features = [str(bins[x]) for x in ['CP', 'AC', 'AP', 'AA', 
         'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
     features.append(str(len(ic_network)/max_contacts))
-    prediction = os.popen('./classify.py '+' '.join(features)).read()
+    base_path = os.path.dirname(os.path.realpath(__file__))
+    prediction = os.popen(os.path.join(base_path, 'classify.py') + ' ' + ' '.join(features)).read()
     print('[+] Class: '+prediction)
 
     if cmd.quiet:

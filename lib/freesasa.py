@@ -26,6 +26,24 @@ except ImportError as e:
 from config import FREESASA_BIN, FREESASA_PAR
 from lib.aa_properties import rel_asa
 
+
+def freesasa_version():
+    """
+    Parses freesasa version and return two integers corresponding to major and minor
+    """
+    cmd = '{0} -v'.format(FREESASA_BIN)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    try:
+        version_raw = (str(stdout, 'utf-8')).split(os.linesep)[0]
+    except:
+        # Python 2.7
+        version_raw = str(stdout).split(os.linesep)[0]
+    version = version_raw.replace("FreeSASA ", "")
+    major, minor = version.split(".")[:2]
+    return int(major), int(minor)
+
+
 def execute_freesasa(structure, selection=None):
     """
     Runs the freesasa executable on a PDB file.
@@ -35,10 +53,17 @@ def execute_freesasa(structure, selection=None):
     """
     io = PDBIO()
 
+    # Check FreeSASA installation
     freesasa, param_f= FREESASA_BIN, FREESASA_PAR
+
     if not os.path.isfile(freesasa):
         raise IOError('[!] freesasa binary not found at `{0}`'.format(freesasa))
-    if not os.path.isfile(param_f):
+    try:
+        major, minor = freesasa_version()
+    except:
+        raise IOError('[!] error retrieving freesasa version from {0}'.format(freesasa))
+
+    if major < 2 and not os.path.isfile(param_f):
         raise IOError('[!] Atomic radii file not found at `{0}`'.format(param_f))
 
     # Rewrite PDB using Biopython to have a proper format
@@ -60,7 +85,11 @@ def execute_freesasa(structure, selection=None):
     # Run freesasa
     # Save atomic asa output to another temp file
     _outf = tempfile.NamedTemporaryFile()
-    cmd = '{0} --B-value-file={1} -c {2} {3}'.format(freesasa, _outf.name, param_f, _pdbf.name)
+
+    if major >= 2:
+        cmd = '{0} {1} --format=pdb --radii=naccess -o {2}'.format(freesasa, _pdbf.name, _outf.name)
+    else:
+        cmd = '{0} --B-value-file={1} -c {2} {3}'.format(freesasa, _outf.name, param_f, _pdbf.name)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
 
