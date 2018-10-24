@@ -168,7 +168,8 @@ if __name__ == "__main__":
     features = [str(bins[x]) for x in ['CP', 'AC', 'AP', 'AA', 
         'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
     features.append(str(len(ic_network)/max_contacts))
-    prediction = os.popen('./classify.py '+' '.join(features)).read()
+    base_path = os.path.dirname(os.path.realpath(__file__))
+    prediction = os.popen(os.path.join(base_path, 'classify.py') + ' ' + ' '.join(features)).read()
     print('[+] Class: '+prediction)
 
     if cmd.quiet:

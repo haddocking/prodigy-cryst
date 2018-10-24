@@ -1,0 +1,31 @@
+[+] Parsed structure file 2uuy (2 chains, 275 residues)
+[+] No. of intermolecular contacts: 58
+[+] No. of charged-charged contacts: 4
+[+] No. of charged-polar contacts: 6
+[+] No. of charged-apolar contacts: 21
+[+] No. of polar-polar contacts: 0
+[+] No. of apolar-polar contacts: 13
+[+] No. of apolar-apolar contacts: 14
+[+] ALA: 7
+[+] CYS: 13
+[+] GLU: 2
+[+] ASP: 2
+[+] GLY: 11
+[+] PHE: 10
+[+] ILE: 0
+[+] HIS: 5
+[+] LYS: 19
+[+] MET: 0
+[+] LEU: 8
+[+] ASN: 0
+[+] GLN: 9
+[+] PRO: 0
+[+] SER: 8
+[+] ARG: 7
+[+] THR: 2
+[+] TRP: 3
+[+] VAL: 2
+[+] TYR: 8
+[+] Link density: 0.1818
+[+] Class: BIO
+
