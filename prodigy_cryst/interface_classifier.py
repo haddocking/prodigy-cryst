@@ -23,10 +23,10 @@ except ImportError as e:
     print('[!] The interface classifier tool requires Biopython', file=sys.stderr)
     raise ImportError(e)
 
-from prodigy_cryst.lib.freesasa import execute_freesasa
-from prodigy_cryst.lib.utils import _check_path
-from prodigy_cryst.lib.parsers import parse_structure
-from prodigy_cryst.lib import aa_properties
+from lib.freesasa import execute_freesasa
+from lib.utils import _check_path
+from lib.parsers import parse_structure
+from lib import aa_properties
 
 
 def calculate_ic(structure, d_cutoff=5.0, selection=None):
@@ -123,7 +123,7 @@ class ProdigyCrystal:
             'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
         features.append(str(len(self.ic_network)/max_contacts))
         base_path = os.path.dirname(os.path.realpath(__file__))
-        prediction = os.popen(os.path.join(base_path, 'prodigy_cryst', 'classify.py') + ' ' + ' '.join(features)).read()
+        prediction = os.popen(os.path.join(base_path, 'classify.py') + ' ' + ' '.join(features)).read()
         self.predicted_class = prediction
 
     def as_dict(self):

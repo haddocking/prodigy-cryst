@@ -23,7 +23,7 @@ except ImportError as e:
     print('[!] The interface classifier tool requires Biopython', file=sys.stderr)
     raise ImportError(e)
 
-from ..config import FREESASA_BIN, FREESASA_PAR
+from config import FREESASA_BIN, FREESASA_PAR
 from aa_properties import rel_asa
 
 
