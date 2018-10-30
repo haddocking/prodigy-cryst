@@ -11,7 +11,7 @@ requirements = [
 ]
 
 setup(
-    name='prodigy-cryst',
+    name='prodigy_cryst',
     version = "1.0.0",
     description=("Predicts if a protein complex is biological or crystallographic."),
     url='http://github.com/haddocking/prodigy-cryst',
@@ -28,7 +28,7 @@ setup(
     install_requires=requirements,
     entry_points={
         'console_scripts': [
-            'prodigy-cryst = interface_classifier:main',
+            'prodigy_cryst = interface_classifier:main',
         ]
     },
     zip_safe=True
