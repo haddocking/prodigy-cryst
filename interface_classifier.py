@@ -15,6 +15,7 @@ __author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues", "Brian Jimenez"
 
 import os
 import sys
+import logging
 
 try:
     from Bio.PDB import NeighborSearch
@@ -22,10 +23,10 @@ except ImportError as e:
     print('[!] The interface classifier tool requires Biopython', file=sys.stderr)
     raise ImportError(e)
 
-from lib.freesasa import execute_freesasa
-from lib.utils import _check_path
-from lib.parsers import parse_structure
-from lib import aa_properties
+from prodigy_cryst.lib.freesasa import execute_freesasa
+from prodigy_cryst.lib.utils import _check_path
+from prodigy_cryst.lib.parsers import parse_structure
+from prodigy_cryst.lib import aa_properties
 
 
 def calculate_ic(structure, d_cutoff=5.0, selection=None):
@@ -37,7 +38,7 @@ def calculate_ic(structure, d_cutoff=5.0, selection=None):
     all_list = ns.search_all(radius=d_cutoff, level='R')
 
     if selection:
-        _sd = selection_dict
+        _sd = selection
         _chain = lambda x: x.parent.id
         ic_list = [c for c in all_list if (_chain(c[0]) in _sd and _chain(c[1]) in _sd)
                     and (_sd[_chain(c[0])] != _sd[_chain(c[1])]) ]
@@ -75,6 +76,106 @@ def analyse_contacts(contact_list):
     return bins
 
 
+class ProdigyCrystal:
+    # init parameters
+    def __init__(self, struct_obj, selection=None):
+        if selection is None:
+            self.selection = [chain.id for chain in struct_obj.get_chains()]
+        else:
+            self.selection = selection
+        self.structure = struct_obj
+        self.ic_network = {}
+        self.bins = {}
+        self.nis_a = 0
+        self.nis_c = 0
+        self.ba_val = 0
+        self.kd_val = 0
+
+    def predict(self, temp=None, distance_cutoff=5.5, acc_threshold=0.05):
+        # Make selection dict from user option or PDB chains
+        if self.selection:
+            selection_dict = {}
+            for igroup, group in enumerate(self.selection):
+                chains = group.split(',')
+                for chain in chains:
+                    if chain in selection_dict:
+                        errmsg = 'Selections must be disjoint sets: {0} is repeated'.format(chain)
+                        raise ValueError(errmsg)
+                    selection_dict[chain] = igroup
+        else:
+            selection_dict = dict([(c.id, nc) for nc, c in enumerate(self.structure.get_chains())])
+
+        # Contacts
+        self.ic_network = calculate_ic(self.structure, selection=selection_dict)
+
+        self.bins = analyse_contacts(self.ic_network)
+
+        # SASA
+        _, cmplx_sasa = execute_freesasa(self.structure, selection=selection_dict)
+        
+        # Link density
+        list1, list2 = zip(*(self.ic_network))
+        max_contacts = len(set(list1))*len(set(list2))
+        self.link_density = len(self.ic_network)/max_contacts
+       
+        # Predict and print out interface type
+        features = [str(self.bins[x]) for x in ['CP', 'AC', 'AP', 'AA', 
+            'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
+        features.append(str(len(self.ic_network)/max_contacts))
+        base_path = os.path.dirname(os.path.realpath(__file__))
+        prediction = os.popen(os.path.join(base_path, 'prodigy_cryst', 'classify.py') + ' ' + ' '.join(features)).read()
+        self.predicted_class = prediction
+
+    def as_dict(self):
+        return_dict = {
+            'structure': self.structure.id,
+            'selection': self.selection,
+            'ICs': len(self.ic_network),
+            'link_density': self.link_density,
+            'predicted_class': self.predicted_class
+        }
+        return_dict.update(self.bins)
+        return return_dict
+
+    def print_prediction(self, outfile='', quiet=False):
+        if outfile:
+            handle = open(outfile, 'w')
+        else:
+            handle = sys.stdout
+
+        if quiet:
+            handle.write('[+] {0}\t{1}\n'.format(self.structure.id, self.predicted_class))
+        else:
+            handle.write('[+] Selection: {0}\n'.format(', '.join(self.selection)))
+            handle.write('[+] No. of intermolecular contacts: {0}\n'.format(len(self.ic_network)))
+            handle.write('[+] No. of charged-charged contacts: {0}\n'.format(self.bins['CC']))
+            handle.write('[+] No. of charged-polar contacts: {0}\n'.format(self.bins['CP']))
+            handle.write('[+] No. of charged-apolar contacts: {0}\n'.format(self.bins['AC']))
+            handle.write('[+] No. of polar-polar contacts: {0}\n'.format(self.bins['PP']))
+            handle.write('[+] No. of apolar-polar contacts: {0}\n'.format(self.bins['AP']))
+            handle.write('[+] No. of apolar-apolar contacts: {0}\n'.format(self.bins['AA']))
+            handle.write('[+] Link density: {0:3.2f}\n'.format(self.link_density))
+            handle.write('[+] Class: {}\n'.format(self.predicted_class))
+
+        if handle is not sys.stdout:
+            handle.close()
+
+    def print_contacts(self, outfile=''):
+        if outfile:
+            handle = open(outfile, 'w')
+        else:
+            handle = sys.stdout
+
+        for res1, res2 in self.ic_network:
+            _fmt_str = "{0.resname:>5s} {0.id[1]:5} {0.parent.id:>3s} {1.resname:>5s} {1.id[1]:5} {1.parent.id:>3s}\n"
+            if res1.parent.id not in self.selection[0]:
+                res1, res2 = res2, res1
+            handle.write(_fmt_str.format(res1, res2))
+
+        if handle is not sys.stdout:
+            handle.close()
+
+
 if __name__ == "__main__":
 
     try:
@@ -110,68 +211,20 @@ if __name__ == "__main__":
 
     cmd = ap.parse_args()
 
-    if cmd.quiet:
-        _stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
+    # setup logging
+    log_level = logging.ERROR if cmd.quiet else logging.INFO
+    logging.basicConfig(level=log_level, stream=sys.stdout, format="%(message)s")
+    logger = logging.getLogger('Prodigy')
 
     struct_path = _check_path(cmd.structf)
 
     # Parse structure
     structure, n_chains, n_res = parse_structure(struct_path)
-    print('[+] Parsed structure file {0} ({1} chains, {2} residues)'.format(structure.id, n_chains, n_res))
-
-    # Make selection dict from user option or PDB chains
-    if cmd.selection:
-        selection_dict = {}
-        for igroup, group in enumerate(cmd.selection):
-            chains = group.split(',')
-            for chain in chains:
-                if chain in selection_dict:
-                    errmsg = 'Selections must be disjoint sets: {0} is repeated'.format(chain)
-                    raise ValueError(errmsg)
-                selection_dict[chain] = igroup
-    else:
-        selection_dict = dict([(c.id, nc) for nc, c in enumerate(structure.get_chains())])
-
-    # Contacts
-    ic_network = calculate_ic(structure, selection=selection_dict)
-    print('[+] No. of intermolecular contacts: {0}'.format(len(ic_network)))
-
-    bins = analyse_contacts(ic_network)
-
-    # SASA
-    _, cmplx_sasa = execute_freesasa(structure, selection=selection_dict)
-        
-    # Print out features
-    print('[+] No. of charged-charged contacts: {0}'.format(bins['CC']))
-    print('[+] No. of charged-polar contacts: {0}'.format(bins['CP']))
-    print('[+] No. of charged-apolar contacts: {0}'.format(bins['AC']))
-    print('[+] No. of polar-polar contacts: {0}'.format(bins['PP']))
-    print('[+] No. of apolar-polar contacts: {0}'.format(bins['AP']))
-    print('[+] No. of apolar-apolar contacts: {0}'.format(bins['AA']))
-    for aa in ['ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'LYS', 'MET', 'LEU', 'ASN', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'TRP', 'VAL', 'TYR']:
-        print('[+] '+aa+': '+str(bins[aa]))
-
-    list1, list2 = zip(*ic_network)
-    max_contacts = len(set(list1))*len(set(list2))
-    print('[+] Link density: {0:3.4f}'.format(len(ic_network)/max_contacts))    
+    prodigy = ProdigyCrystal(structure, cmd.selection)
+    prodigy.predict()
+    prodigy.print_prediction(quiet=cmd.quiet)
 
     # Print out interaction network
     if cmd.contact_list:
         fname = struct_path[:-4] + '.ic'
-        with open(fname, 'w') as ic_handle:
-            for pair in ic_network:
-                _fmt_str = "{0.parent.id}\t{0.resname}\t{0.id[1]}\t{1.parent.id}\t{1.resname}\t{1.id[1]}".format(*pair)
-                print(_fmt_str, file=ic_handle)
-   
-    # Predict and print out interface type
-    features = [str(bins[x]) for x in ['CP', 'AC', 'AP', 'AA', 
-        'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
-    features.append(str(len(ic_network)/max_contacts))
-    base_path = os.path.dirname(os.path.realpath(__file__))
-    prediction = os.popen(os.path.join(base_path, 'classify.py') + ' ' + ' '.join(features)).read()
-    print('[+] Class: '+prediction)
-
-    if cmd.quiet:
-        sys.stdout = _stdout
-        print('[+] Class: '+prediction)
+        prodigy.print_contacts(fname)

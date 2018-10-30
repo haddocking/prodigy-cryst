@@ -23,5 +23,5 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     features = sys.argv[1:]
     base_path = os.path.dirname(os.path.realpath(__file__))
-    model = pickle.load(open(os.path.join(base_path, 'classifier.sav'), 'rb'))
+    model = pickle.load(open(os.path.join(base_path, 'data', 'classifier.sav'), 'rb'))
     print(model.predict([features])[0])
