@@ -1,0 +1,11 @@
+[+] Reading structure file: examples/1ppe.pdb
+[+] Selection: E, I
+[+] No. of intermolecular contacts: 71
+[+] No. of charged-charged contacts: 4
+[+] No. of charged-polar contacts: 8
+[+] No. of charged-apolar contacts: 24
+[+] No. of polar-polar contacts: 0
+[+] No. of apolar-polar contacts: 15
+[+] No. of apolar-apolar contacts: 20
+[+] Link density: 0.14
+[+] Class: BIO
