@@ -28,7 +28,7 @@ setup(
     install_requires=requirements,
     entry_points={
         'console_scripts': [
-            'prodigy-cryst = prodigy-cryst.interface_classifier:main',
+            'prodigy-cryst = interface_classifier:main',
         ]
     },
     zip_safe=True
