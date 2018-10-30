@@ -18,7 +18,7 @@ setup(
     author='Computational Structural Biology Group @ Utrecht University',
     author_email='prodigy.bonvinlab@gmail.com',
     license='Apache 2.0',
-    packages=['prodigy_cryst'],
+    packages=['prodigy_cryst', 'prodigy_cryst.lib'],
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 4 - Beta",
