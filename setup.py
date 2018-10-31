@@ -30,7 +30,6 @@ setup(
             'prodigy_cryst = prodigy_cryst.interface_classifier:main',
         ]
     },
-    data_files=[('data', ['data/List_of_features-MANY.csv', 'data/classifier.sav'])]
-    )
+    data_files=[('data', ['data/List_of_features-MANY.csv', 'data/classifier.sav'])],
     zip_safe=False
 )
