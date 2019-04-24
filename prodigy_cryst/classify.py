@@ -24,4 +24,5 @@ with warnings.catch_warnings():
     features = sys.argv[1:]
     base_path = os.path.dirname(os.path.realpath(__file__))
     model = pickle.load(open(os.path.join(base_path, 'data', 'classifier.sav'), 'rb'))
-    print(model.predict([features])[0])
+    proba = list(model.predict_proba([features])[0])
+    print(['BIO', 'XTAL'][proba.index(max(proba))], proba[0], proba[1])
