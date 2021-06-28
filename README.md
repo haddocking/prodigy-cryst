@@ -8,7 +8,7 @@ git clone http://github.com/biopython/biopython.git
 cd biopython
 sudo python setup.py install # Alternatively, install locally but fix $PYTHONPATH
 
-wget http://freesasa.github.io/freesasa-1.0.tar.gz
+wget https://github.com/mittinatten/freesasa/releases/download/1.0/freesasa-1.0.tar.gz
 tar -xzvf freesasa-1.0.tar.gz
 cd freesasa-1.0
 ./configure && make && make install
