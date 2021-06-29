@@ -13,7 +13,7 @@ tar -xzvf freesasa-1.0.tar.gz
 cd freesasa-1.0
 ./configure && make && make install
 
-pip3 install scikit-learn
+pip3 install scikit-learn==0.22
 
 git clone http://github.com/haddocking/interface-classifier
 
