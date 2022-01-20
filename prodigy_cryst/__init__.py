@@ -1,1 +1,1 @@
-from .interface_classifier import *
+from prodigy_cryst.interface_classifier import *

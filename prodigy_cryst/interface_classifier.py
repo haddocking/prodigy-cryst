@@ -1,14 +1,10 @@
-#!/usr/bin/env python
-#
+"""
+Biological/crystallographic interface classifier based on Intermolecular Contacts (ICs).
+"""
 # This code is part of the interface classifier tool distribution
 # and governed by its license.  Please see the LICENSE file that should
 # have been included as part of this package.
 #
-
-"""
-Biological/crystallographic interface classifier based on Intermolecular Contacts (ICs).
-"""
-
 from __future__ import print_function, division
 
 __author__ = ["Katarina Elez", "Anna Vangone",
@@ -17,6 +13,8 @@ __author__ = ["Katarina Elez", "Anna Vangone",
 import os
 import sys
 import logging
+import pickle
+import warnings
 
 try:
     from Bio.PDB import NeighborSearch
@@ -24,9 +22,9 @@ except ImportError as e:
     print('[!] The interface classifier tool requires Biopython', file=sys.stderr)
     raise ImportError(e)
 
-from .lib.utils import _check_path
-from .lib.parsers import parse_structure
-from .lib import aa_properties
+from prodigy_cryst.lib.utils import _check_path
+from prodigy_cryst.lib.parsers import parse_structure
+from prodigy_cryst.lib import aa_properties
 
 
 def calculate_ic(structure, d_cutoff=5.0, selection=None):
@@ -123,9 +121,14 @@ class ProdigyCrystal:
                                                 'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
         features.append(str(len(self.ic_network)/max_contacts))
         base_path = os.path.dirname(os.path.realpath(__file__))
-        prediction = os.popen(os.path.join(
-            base_path, 'classify.py') + ' ' + ' '.join(features)).read()
-        self.predicted_class = prediction
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            model = pickle.load(
+                open(os.path.join(base_path, 'data', 'classifier.sav'), 'rb'))
+            proba = list(model.predict_proba([features])[0])
+            self.predicted_class = ['BIO', 'XTAL'][proba.index(
+                max(proba))], proba[0], proba[1]
 
     def as_dict(self):
         return_dict = {
