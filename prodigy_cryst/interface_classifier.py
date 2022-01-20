@@ -117,8 +117,8 @@ class ProdigyCrystal:
         self.link_density = len(self.ic_network)/max_contacts
 
         # Predict and print out interface type
-        features = [str(self.bins[x]) for x in ['CP', 'AC', 'AP', 'AA',
-                                                'ALA', 'CYS', 'GLU', 'ASP', 'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
+        features = [str(self.bins[x]) for x in ['CP', 'AC', 'AP', 'AA', 'ALA', 'CYS', 'GLU', 'ASP',
+                                                'GLY', 'PHE', 'ILE', 'HIS', 'MET', 'LEU', 'GLN', 'PRO', 'SER', 'ARG', 'THR', 'VAL', 'TYR']]
         features.append(str(len(self.ic_network)/max_contacts))
         base_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -169,7 +169,9 @@ class ProdigyCrystal:
                 '[+] No. of apolar-apolar contacts: {0}\n'.format(self.bins['AA']))
             handle.write(
                 '[+] Link density: {0:3.2f}\n'.format(self.link_density))
-            handle.write('[+] Class: {}\n'.format(self.predicted_class))
+            values = self.predicted_class
+            handle.write(
+                f'[+] Class: {values[0]} {values[1]:.3f} {values[2]:.3f}{os.linesep}')
 
         if handle is not sys.stdout:
             handle.close()
