@@ -1,45 +1,48 @@
-# Interface Classifier  
-Collection of scripts to predict whether an interface in a protein-protein 
-complex is biological or crystallographic from its atomic coordinates.
+# PRODIGY-XTAL - Interface Classifier
 
-## Quick & Dirty Installation
+This is the standalone **PRODIGY-XTAL** (PROtein binDIng enerGY prediction) used to predict whether an interface in a protein-protein complex is **Biological** or **Crystallographic** from its atomic coordinates.
+
+More PRODIGY services are available as web server at https://bianca.science.uu.nl/prodigy/
+
+
+## Installation
 ```bash
-git clone http://github.com/biopython/biopython.git
-cd biopython
-sudo python setup.py install # Alternatively, install locally but fix $PYTHONPATH
-
-wget http://freesasa.github.io/freesasa-1.0.tar.gz
-tar -xzvf freesasa-1.0.tar.gz
-cd freesasa-1.0
-./configure && make && make install
-
-pip3 install scikit-learn
-
-git clone http://github.com/haddocking/interface-classifier
-
-# Edit the config.py to setup the paths to the freesasa binary and radii files
-
-# Have fun!
+$ git clone https://github.com/haddocking/prodigy-cryst.git
+$ cd prodigy-cryst
+$ python setup.py install
 ```
 
 ## Usage
 
 ```bash
-python interface_classifier.py <pdb file> [--selection <chain1><chain2>]
+prodigy_identify <pdb file> [--selection <chain1> <chain2>]
 ```
 
-Type --help to get a list of all the possible options of the script.
+Example:
+```bash
+$ prodigy_identify examples/1ppe.pdb --selection E I
 
-## Dependencies  
-* The scripts rely on [Biopython](www.biopython.org) to validate the PDB structures and calculate interatomic distances.
-* [freesasa](https://github.com/mittinatten/freesasa), with the parameter set used in NACCESS ([Chothia,1976](http://www.ncbi.nlm.nih.gov/pubmed/994183)), is also required for calculating the buried surface area. Both 2.x and 1.x version series are supported.
-* [scikit-learn](https://github.com/scikit-learn/scikit-learn) for Python 3 is necessary to load and use the classifier.
+[+] Reading structure file: /Users/rodrigo/repos/prodigy-cryst/examples/1ppe.pdb
+[+] Selection: E, I
+[+] No. of intermolecular contacts: 71
+[+] No. of charged-charged contacts: 4
+[+] No. of charged-polar contacts: 8
+[+] No. of charged-apolar contacts: 24
+[+] No. of polar-polar contacts: 0
+[+] No. of apolar-polar contacts: 15
+[+] No. of apolar-apolar contacts: 20
+[+] Link density: 0.14
+[+] Class: BIO 0.804 0.196
+```
 
-To install and use the scripts, just clone the git repository or download the tarball zip
-archive. Make sure `freesasa`, Biopython and scikit-learn are accessible to the Python scripts
-through the appropriate environment variables ($PYTHONPATH).
+Type `--help` to get a list of all the possible options of the script.
 
-## License  
-These utilities are open-source and licensed under the Apache License 2.0. For more information
-read the LICENSE file.
+## Dependencies
+* [Biopython](www.biopython.org) to validate the PDB structures and calculate interatomic distances.
+* [freesasa](https://github.com/mittinatten/freesasa), with the parameter set used in NACCESS ([Chothia, 1976](http://www.ncbi.nlm.nih.gov/pubmed/994183))
+* [scikit-learn](https://github.com/scikit-learn/scikit-learn) to load and use the classifier.
+
+
+## License
+These utilities are open-source and licensed under the Apache License 2.0. For more information read the LICENSE file.
 

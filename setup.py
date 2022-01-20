@@ -2,8 +2,10 @@ import os
 from setuptools import setup
 import codecs
 
+
 def read(fname):
     return codecs.open(os.path.join(os.path.dirname(__file__), fname), encoding='utf-8').read()
+
 
 requirements = [
     "numpy",
@@ -12,8 +14,9 @@ requirements = [
 
 setup(
     name='prodigy_cryst',
-    version = "1.0.0",
-    description=("Predicts if a protein complex interface is biological or crystallographic."),
+    version="1.0.0",
+    description=(
+        "Predicts if a protein complex interface is biological or crystallographic."),
     url='http://github.com/haddocking/prodigy-cryst',
     author='Computational Structural Biology Group @ Utrecht University',
     author_email='prodigy.bonvinlab@gmail.com',
@@ -29,7 +32,7 @@ setup(
     install_requires=requirements,
     entry_points={
         'console_scripts': [
-            'prodigy_cryst = prodigy_cryst.interface_classifier:main',
+            'prodigy_identify = prodigy_cryst.interface_classifier:main',
         ]
     },
     zip_safe=False
