@@ -11,8 +11,8 @@ Assorted utility functions.
 
 from __future__ import print_function, division
 
-import math
 import os
+
 
 def _check_path(path):
     """
@@ -23,4 +23,3 @@ def _check_path(path):
     if not os.path.isfile(full_path):
         raise IOError('Could not read file: {0}'.format(path))
     return full_path
-

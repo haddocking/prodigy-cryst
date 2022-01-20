@@ -12,6 +12,7 @@ Functions to execute freesasa and parse its output.
 from __future__ import print_function, division
 
 import os
+from shutil import ExecError
 import subprocess
 import sys
 import tempfile
@@ -32,12 +33,14 @@ def freesasa_version():
     Parses freesasa version and return two integers corresponding to major and minor
     """
     cmd = '{0} -v'.format(FREESASA_BIN)
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     try:
         version_raw = (str(stdout, 'utf-8')).split(os.linesep)[0]
-    except:
+    except ExecError as e:
         # Python 2.7
+        print(e)
         version_raw = str(stdout).split(os.linesep)[0]
     version = version_raw.replace("FreeSASA ", "")
     major, minor = version.split(".")[:2]
@@ -54,14 +57,14 @@ def execute_freesasa(structure, selection=None):
     io = PDBIO()
 
     # Check FreeSASA installation
-    freesasa, param_f= FREESASA_BIN, FREESASA_PAR
+    freesasa, param_f = FREESASA_BIN, FREESASA_PAR
 
     if not os.path.isfile(freesasa):
         raise IOError('[!] freesasa binary not found at `{0}`'.format(freesasa))
     try:
         major, minor = freesasa_version()
-    except:
-        raise IOError('[!] error retrieving freesasa version from {0}'.format(freesasa))
+    except Exception as e:
+        raise IOError(f'[!] error retrieving freesasa version from {freesasa}, {e}')
 
     if major < 2 and not os.path.isfile(param_f):
         raise IOError('[!] Atomic radii file not found at `{0}`'.format(param_f))
@@ -87,10 +90,13 @@ def execute_freesasa(structure, selection=None):
     _outf = tempfile.NamedTemporaryFile()
 
     if major >= 2:
-        cmd = '{0} {1} --format=pdb --radii=naccess -o {2}'.format(freesasa, _pdbf.name, _outf.name)
+        cmd = '{0} {1} --format=pdb --radii=naccess -o {2}'.format(
+            freesasa, _pdbf.name, _outf.name)
     else:
-        cmd = '{0} --B-value-file={1} -c {2} {3}'.format(freesasa, _outf.name, param_f, _pdbf.name)
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        cmd = '{0} --B-value-file={1} -c {2} {3}'.format(
+            freesasa, _outf.name, param_f, _pdbf.name)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
 
     if p.returncode:
@@ -108,6 +114,7 @@ def execute_freesasa(structure, selection=None):
 
     return asa, rsa
 
+
 def parse_freesasa_output(fpath):
     """
     Returns per-residue relative accessibility of side-chain and main-chain
@@ -117,13 +124,13 @@ def parse_freesasa_output(fpath):
     asa_data, rsa_data = {}, {}
 
     _rsa = rel_asa
-    _bb = set(('CA', 'C', 'N', 'O'))
+    # _bb = set(('CA', 'C', 'N', 'O'))
 
     P = PDBParser(QUIET=1)
     s = P.get_structure('bogus', fpath.name)
     for res in s.get_residues():
         res_id = (res.parent.id, res.resname, res.id[1])
-        asa_mc, asa_sc, total_asa = 0, 0, 0
+        _, _, total_asa = 0, 0, 0
         for atom in res:
             aname = atom.name
             at_id = (res.parent.id, res.resname, res.id[1], aname)
@@ -138,4 +145,3 @@ def parse_freesasa_output(fpath):
         rsa_data[res_id] = total_asa / _rsa['total'][res.resname]
 
     return asa_data, rsa_data
-

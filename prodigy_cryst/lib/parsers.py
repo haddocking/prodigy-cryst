@@ -22,6 +22,7 @@ except ImportError as e:
     print('[!] The interface classifier tool requires Biopython', file=sys.stderr)
     raise ImportError(e)
 
+
 def parse_structure(path):
     """
     Parses a structure using Biopython's PDB/mmCIF Parser
@@ -36,7 +37,8 @@ def parse_structure(path):
 
     _ext = set(('pdb', 'ent', 'cif'))
     if s_ext not in _ext:
-        raise IOError('[!] Structure format \'{0}\' is not supported. Use \'.pdb\' or \'.cif\'.'.format(s_ext))
+        raise IOError(
+            '[!] Structure format \'{0}\' is not supported. Use \'.pdb\' or \'.cif\'.'.format(s_ext))
 
     if s_ext in set(('pdb', 'ent')):
         sparser = PDBParser(QUIET=1)
@@ -46,12 +48,14 @@ def parse_structure(path):
     try:
         s = sparser.get_structure(sname, path)
     except Exception as e:
-        log.error('[!] Structure \'{0}\' could not be parsed'.format(sname), file=sys.stderr)
+        log.error('[!] Structure \'{0}\' could not be parsed'.format(
+            sname), file=sys.stderr)
         raise Exception(e)
 
     # Keep first model only
     if len(s) > 1:
-        log.warning('[!] Structure contains more than one model. Only the first one will be kept')
+        log.warning(
+            '[!] Structure contains more than one model. Only the first one will be kept')
         model_one = s[0].id
         for m in s.child_list[:]:
             if m.id != model_one:
@@ -69,18 +73,23 @@ def parse_structure(path):
 
     # Remove HETATMs and solvent
     res_list = list(s.get_residues())
-    _ignore = lambda r: r.id[0][0] == 'W' or r.id[0][0] == 'H'
+
+    def _ignore(r):
+        return r.id[0][0] == 'W' or r.id[0][0] == 'H'
     for res in res_list:
         if _ignore(res):
             chain = res.parent
             chain.detach_child(res.id)
         elif not is_aa(res, standard=True):
-            raise ValueError('Unsupported non-standard amino acid found: {0}'.format(res.resname))
+            raise ValueError(
+                'Unsupported non-standard amino acid found: {0}'.format(res.resname))
     n_res = len(list(s.get_residues()))
-    
+
     # Remove Hydrogens
     atom_list = list(s.get_atoms())
-    _ignore = lambda x: x.element == 'H'
+
+    def _ignore(x):
+        return x.element == 'H'
     for atom in atom_list:
         if _ignore(atom):
             residue = atom.parent
@@ -95,8 +104,8 @@ def parse_structure(path):
     if n_peptides != n_chains:
         log.warning('[!] Structure contains gaps:', file=sys.stderr)
         for i_pp, pp in enumerate(peptides):
-            log.warning('\t{1.parent.id} {1.resname}{1.id[1]} < Fragment {0} > {2.parent.id} {2.resname}{2.id[1]}'.format(i_pp, pp[0], pp[-1]), file=sys.stderr)
-        #raise Exception('Calculation cannot proceed')
+            log.warning('\t{1.parent.id} {1.resname}{1.id[1]} < Fragment {0} > {2.parent.id} {2.resname}{2.id[1]}'.format(
+                i_pp, pp[0], pp[-1]), file=sys.stderr)
+        # raise Exception('Calculation cannot proceed')
 
     return (s, n_chains, n_res)
-
