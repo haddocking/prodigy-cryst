@@ -21,23 +21,24 @@ try:
     from Bio.PDB import PDBParser
     from Bio.PDB import PDBIO, Select
 except ImportError as e:
-    print('[!] The interface classifier tool requires Biopython', file=sys.stderr)
+    print("[!] The interface classifier tool requires Biopython", file=sys.stderr)
     raise ImportError(e)
 
 from ..config import FREESASA_BIN, FREESASA_PAR
-from aa_properties import rel_asa
+from prodigy_cryst.lib.aa_properties import rel_asa
 
 
 def freesasa_version():
     """
     Parses freesasa version and return two integers corresponding to major and minor
     """
-    cmd = '{0} -v'.format(FREESASA_BIN)
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+    cmd = "{0} -v".format(FREESASA_BIN)
+    p = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     stdout, stderr = p.communicate()
     try:
-        version_raw = (str(stdout, 'utf-8')).split(os.linesep)[0]
+        version_raw = (str(stdout, "utf-8")).split(os.linesep)[0]
     except ExecError as e:
         # Python 2.7
         print(e)
@@ -60,14 +61,14 @@ def execute_freesasa(structure, selection=None):
     freesasa, param_f = FREESASA_BIN, FREESASA_PAR
 
     if not os.path.isfile(freesasa):
-        raise IOError('[!] freesasa binary not found at `{0}`'.format(freesasa))
+        raise IOError("[!] freesasa binary not found at `{0}`".format(freesasa))
     try:
         major, minor = freesasa_version()
     except Exception as e:
-        raise IOError(f'[!] error retrieving freesasa version from {freesasa}, {e}')
+        raise IOError(f"[!] error retrieving freesasa version from {freesasa}, {e}")
 
     if major < 2 and not os.path.isfile(param_f):
-        raise IOError('[!] Atomic radii file not found at `{0}`'.format(param_f))
+        raise IOError("[!] Atomic radii file not found at `{0}`".format(param_f))
 
     # Rewrite PDB using Biopython to have a proper format
     # freesasa is very picky with line width (80 characters or fails!)
@@ -90,17 +91,20 @@ def execute_freesasa(structure, selection=None):
     _outf = tempfile.NamedTemporaryFile()
 
     if major >= 2:
-        cmd = '{0} {1} --format=pdb --radii=naccess -o {2}'.format(
-            freesasa, _pdbf.name, _outf.name)
+        cmd = "{0} {1} --format=pdb --radii=naccess -o {2}".format(
+            freesasa, _pdbf.name, _outf.name
+        )
     else:
-        cmd = '{0} --B-value-file={1} -c {2} {3}'.format(
-            freesasa, _outf.name, param_f, _pdbf.name)
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+        cmd = "{0} --B-value-file={1} -c {2} {3}".format(
+            freesasa, _outf.name, param_f, _pdbf.name
+        )
+    p = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     stdout, stderr = p.communicate()
 
     if p.returncode:
-        print('[!] freesasa did not run successfully', file=sys.stderr)
+        print("[!] freesasa did not run successfully", file=sys.stderr)
         print(cmd, file=sys.stderr)
         raise Exception(stderr)
 
@@ -127,7 +131,7 @@ def parse_freesasa_output(fpath):
     # _bb = set(('CA', 'C', 'N', 'O'))
 
     P = PDBParser(QUIET=1)
-    s = P.get_structure('bogus', fpath.name)
+    s = P.get_structure("bogus", fpath.name)
     for res in s.get_residues():
         res_id = (res.parent.id, res.resname, res.id[1])
         _, _, total_asa = 0, 0, 0
@@ -142,6 +146,6 @@ def parse_freesasa_output(fpath):
             total_asa += asa
             asa_data[at_id] = asa
 
-        rsa_data[res_id] = total_asa / _rsa['total'][res.resname]
+        rsa_data[res_id] = total_asa / _rsa["total"][res.resname]
 
     return asa_data, rsa_data
