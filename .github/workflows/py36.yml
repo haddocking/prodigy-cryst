@@ -1,9 +1,7 @@
 name: unittests py39
 
 on:
-  [pull_request]
-  push:
-    branches: [main]
+  [pull_request, push]
 
 jobs:
   build:
