@@ -25,6 +25,10 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install coverage[toml] tox
 
+    - name: Install freesasa
+      run: |
+      pip install freesasa
+
     - name: Test
       if: always()
       run: tox -e py36
