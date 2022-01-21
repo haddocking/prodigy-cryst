@@ -87,7 +87,13 @@ def test_prodigycrystal_print_prediction(prodigyxtal):
     temp_f = NamedTemporaryFile(delete=False)
     prodigyxtal.print_prediction(outfile=temp_f.name)
     observed_printed_output = "".join(open(temp_f.name).readlines())
-    expected_printed_output = "[+] Selection: E, I\n[+] No. of intermolecular contacts: 0\n[+] No. of charged-charged contacts: 1\n[+] No. of charged-polar contacts: 2\n[+] No. of charged-apolar contacts: 3\n[+] No. of polar-polar contacts: 4\n[+] No. of apolar-polar contacts: 5\n[+] No. of apolar-apolar contacts: 6\n[+] Link density: 0.42\n[+] Class: BIO 0.804 0.196\n"
+    expected_printed_output = (
+        "[+] Selection: E, I\n[+] No. of intermolecular contacts: 0\n[+] No. of "
+        "charged-charged contacts: 1\n[+] No. of charged-polar contacts: 2\n[+] No. of"
+        " charged-apolar contacts: 3\n[+] No. of polar-polar contacts: 4\n[+] No. of"
+        " apolar-polar contacts: 5\n[+] No. of apolar-apolar contacts: 6\n[+] Link"
+        " density: 0.42\n[+] Class: BIO 0.804 0.196\n"
+    )
 
     assert observed_printed_output == expected_printed_output
     os.unlink(temp_f.name)
@@ -100,7 +106,7 @@ def test_prodigycrystal_print_contacts(prodigyxtal, contact_list):
     prodigyxtal.print_contacts(outfile=temp_f.name)
 
     observed_printed_contacts = "".join(open(temp_f.name).readlines())
-    expected_printed_contacts = '  TYR    20   E   ARG     1   I\n'
+    expected_printed_contacts = "  TYR    20   E   ARG     1   I\n"
 
     assert observed_printed_contacts == expected_printed_contacts
 
