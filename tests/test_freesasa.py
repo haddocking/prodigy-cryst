@@ -16,6 +16,7 @@ def parsed_structure():
     return s
 
 
+@pytest.mark.skip(reason="Function not used")
 def test_freesasa_version():
     """Test the check of freesasa version."""
     major, minor = freesasa_version()
@@ -24,6 +25,7 @@ def test_freesasa_version():
     assert type(minor) == int
 
 
+@pytest.mark.skip(reason="Function not used")
 def test_execute_freesasa(parsed_structure):
     """Test if freesasa can calculate asa/rsa."""
     asa, rsa = execute_freesasa(parsed_structure)

@@ -26,7 +26,7 @@ except ImportError as e:
     print("[!] The interface classifier tool requires Biopython", file=sys.stderr)
     raise ImportError(e)
 
-from prodigy_cryst.lib.freesasa import execute_freesasa
+# from prodigy_cryst.lib.freesasa import execute_freesasa
 from prodigy_cryst.lib.utils import _check_path
 from prodigy_cryst.lib.parsers import parse_structure
 from prodigy_cryst.lib import aa_properties
@@ -147,8 +147,11 @@ class ProdigyCrystal:
 
         self.bins = analyse_contacts(self.ic_network)
 
+        # =====
+        # This is not used!
         # SASA
-        _, cmplx_sasa = execute_freesasa(self.structure, selection=selection_dict)
+        # _, cmplx_sasa = execute_freesasa(self.structure, selection=selection_dict)
+        # =====
 
         # Link density
         list1, list2 = zip(*(self.ic_network))
