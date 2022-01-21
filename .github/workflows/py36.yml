@@ -1,7 +1,7 @@
 name: unittests py39
 
 on:
-  [pull_request, push]
+  [pull_request]
 
 jobs:
   build:
