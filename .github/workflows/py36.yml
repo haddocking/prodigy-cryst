@@ -1,4 +1,4 @@
-name: unittests py39
+name: unittests py36
 
 on:
   [pull_request]
