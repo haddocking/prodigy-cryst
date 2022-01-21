@@ -27,7 +27,7 @@ jobs:
 
     - name: Install freesasa
       run: |
-      pip install freesasa
+        pip install freesasa
 
     - name: Test
       if: always()
