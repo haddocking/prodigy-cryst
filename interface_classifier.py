@@ -13,9 +13,12 @@ from __future__ import print_function, division
 
 __author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues", "Brian Jimenez"]
 
-import os
+# import os
 import sys
 import logging
+import pickle
+import warnings
+from pathlib import Path
 
 try:
     from Bio.PDB import NeighborSearch
@@ -180,12 +183,23 @@ class ProdigyCrystal:
             ]
         ]
         features.append(str(len(self.ic_network) / max_contacts))
-        base_path = os.path.dirname(os.path.realpath(__file__))
-        prediction = os.popen(
-            os.path.join(base_path, "prodigy_cryst", "classify.py")
-            + " "
-            + " ".join(features)
-        ).read()
+        # Q: Why is this calling classify?
+        # base_path = os.path.dirname(os.path.realpath(__file__))
+        # prediction = os.popen(
+        #     os.path.join(base_path, "prodigy_cryst", "classify.py")
+        #     + " "
+        #     + " ".join(features)
+        # ).read()
+        model_f = Path(
+            Path(__file__).resolve().parent, "prodigy_cryst/data/classifier.sav"
+        )
+        # Calling this will raise some warning about modules that will be deprecated
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            with open(model_f, "rb") as fh:
+                model = pickle.load(fh)
+            proba = list(model.predict_proba([features])[0])
+            prediction = ["BIO", "XTAL"][proba.index(max(proba))], proba[0], proba[1]
         self.predicted_class = prediction
 
     def as_dict(self):
@@ -233,7 +247,9 @@ class ProdigyCrystal:
                 "[+] No. of apolar-apolar contacts: {0}\n".format(self.bins["AA"])
             )
             handle.write("[+] Link density: {0:3.2f}\n".format(self.link_density))
-            handle.write("[+] Class: {}\n".format(self.predicted_class))
+            # handle.write("[+] Class: {}\n".format(self.predicted_class))
+            values = self.predicted_class
+            handle.write(f"[+] Class: {values[0]} {values[1]} {values[2]}\n")
 
         if handle is not sys.stdout:
             handle.close()
