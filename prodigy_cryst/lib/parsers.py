@@ -52,9 +52,7 @@ def parse_structure(path):
         s = sparser.get_structure(sname, path)
     except Exception as e:
         # log.error("[!] Structure '{0}' could not be parsed".format(sname))
-        log.error(
-            "[!] Structure '{0}' could not be parsed".format(sname), file=sys.stderr
-        )
+        log.error("[!] Structure '{0}' could not be parsed".format(sname))
         raise Exception(e)
 
     # Keep first model only
