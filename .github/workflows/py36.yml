@@ -1,10 +1,6 @@
 name: unittests py36
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [pull_request, push]
 
 jobs:
   build:
