@@ -19,7 +19,7 @@ try:
     from Bio.PDB import MMCIFParser, PDBParser
     from Bio.PDB.Polypeptide import PPBuilder, is_aa
 except ImportError as e:
-    print("[!] The interface classifier tool requires Biopython", file=sys.stderr)
+    logging.error("[!] The interface classifier tool requires Biopython")
     raise ImportError(e)
 
 
@@ -111,13 +111,12 @@ def parse_structure(path):
     n_chains = len(set([c.id for c in s.get_chains()]))
 
     if n_peptides != n_chains:
-        log.warning("[!] Structure contains gaps:", file=sys.stderr)
+        log.warning("[!] Structure contains gaps:")
         for i_pp, pp in enumerate(peptides):
             log.warning(
                 "\t{1.parent.id} {1.resname}{1.id[1]} < Fragment {0} > {2.parent.id} {2.resname}{2.id[1]}".format(
                     i_pp, pp[0], pp[-1]
-                ),
-                file=sys.stderr,
+                )
             )
         # raise Exception('Calculation cannot proceed')
 
