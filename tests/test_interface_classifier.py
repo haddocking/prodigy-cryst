@@ -18,7 +18,7 @@ def parsed_structure():
 
 @pytest.fixture
 def parsed_structure_w_gaps():
-    pdb_path = Path(DATA_FOLDER, "complex_w_gaps.pdb")
+    pdb_path = Path(DATA_FOLDER, "ens_w_gaps.pdb")
     s, _, _ = parse_structure(pdb_path)
     return s
 

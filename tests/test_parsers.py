@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from Bio.PDB.Structure import Structure
 
 from prodigy_cryst.lib.parsers import parse_structure
@@ -18,8 +19,10 @@ def test_parse_structure():
     assert n_chains == 2
     assert n_res == 252
 
-    pdb_w_gaps_path = Path(DATA_FOLDER, "complex_w_gaps.pdb")
+    with pytest.raises(Exception):
+        parse_structure("nothing.pdb")
 
+    pdb_w_gaps_path = Path(DATA_FOLDER, "ens_w_gaps.pdb")
     s_gaps, n_chains_gaps, n_res_gaps = parse_structure(pdb_w_gaps_path)
 
     assert isinstance(s_gaps, Structure)
