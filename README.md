@@ -1,3 +1,6 @@
+[![unittests py36](https://github.com/haddocking/prodigy-cryst/actions/workflows/py36.yml/badge.svg)](https://github.com/haddocking/prodigy-cryst/actions/workflows/py36.yml)
+[![codecov](https://codecov.io/gh/haddocking/prodigy-cryst/branch/master/graph/badge.svg?token=KCGiAqKRnu)](https://codecov.io/gh/haddocking/prodigy-cryst)
+
 # Interface Classifier  
 Collection of scripts to predict whether an interface in a protein-protein 
 complex is biological or crystallographic from its atomic coordinates.
