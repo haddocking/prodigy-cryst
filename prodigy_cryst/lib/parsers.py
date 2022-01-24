@@ -9,14 +9,14 @@
 Functions to read PDB/mmCIF files
 """
 
-from __future__ import print_function, division
+from __future__ import division, print_function
 
+import logging
 import os
 import sys
-import logging
 
 try:
-    from Bio.PDB import PDBParser, MMCIFParser
+    from Bio.PDB import MMCIFParser, PDBParser
     from Bio.PDB.Polypeptide import PPBuilder, is_aa
 except ImportError as e:
     print("[!] The interface classifier tool requires Biopython", file=sys.stderr)

@@ -1,7 +1,10 @@
-from . import DATA_FOLDER
 from pathlib import Path
+
 from Bio.PDB.Structure import Structure
+
 from prodigy_cryst.lib.parsers import parse_structure
+
+from . import DATA_FOLDER
 
 
 def test_parse_structure():

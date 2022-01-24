@@ -1,4 +1,4 @@
 biopython
 freesasa
 scikit-learn==0.22
-tox==3
+tox>=3.14

@@ -1,5 +1,6 @@
-from prodigy_cryst.lib.utils import _check_path
 from tempfile import NamedTemporaryFile
+
+from prodigy_cryst.lib.utils import _check_path
 
 
 def test__check_path():

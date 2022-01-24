@@ -1,10 +1,12 @@
-from interface_classifier import calculate_ic, analyse_contacts, ProdigyCrystal
-from prodigy_cryst.lib.parsers import parse_structure
-from tests import DATA_FOLDER
+import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+
 import pytest
-import os
+
+from interface_classifier import ProdigyCrystal, analyse_contacts, calculate_ic
+from prodigy_cryst.lib.parsers import parse_structure
+from tests import DATA_FOLDER
 
 
 @pytest.fixture

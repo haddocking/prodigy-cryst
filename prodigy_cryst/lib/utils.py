@@ -9,7 +9,7 @@
 Assorted utility functions.
 """
 
-from __future__ import print_function, division
+from __future__ import division, print_function
 
 import os
 

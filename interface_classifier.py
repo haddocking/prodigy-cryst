@@ -9,14 +9,15 @@
 Biological/crystallographic interface classifier based on Intermolecular Contacts (ICs).
 """
 
-from __future__ import print_function, division
+from __future__ import division, print_function
 
 __author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues", "Brian Jimenez"]
 
-# import os
-import sys
 import logging
 import pickle
+
+# import os
+import sys
 import warnings
 from pathlib import Path
 
@@ -26,10 +27,11 @@ except ImportError as e:
     print("[!] The interface classifier tool requires Biopython", file=sys.stderr)
     raise ImportError(e)
 
+from prodigy_cryst.lib import aa_properties
+from prodigy_cryst.lib.parsers import parse_structure
+
 # from prodigy_cryst.lib.freesasa import execute_freesasa
 from prodigy_cryst.lib.utils import _check_path
-from prodigy_cryst.lib.parsers import parse_structure
-from prodigy_cryst.lib import aa_properties
 
 
 def calculate_ic(structure, d_cutoff=5.0, selection=None):

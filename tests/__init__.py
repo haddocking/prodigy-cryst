@@ -1,3 +1,4 @@
 from pathlib import Path
 
-DATA_FOLDER = Path("tests/golden_data").resolve()
+test_path = Path(__file__).resolve().parents[0]
+DATA_FOLDER = Path(test_path, "golden_data")

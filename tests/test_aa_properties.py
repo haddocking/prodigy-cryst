@@ -1,9 +1,10 @@
+import pytest
+
 from prodigy_cryst.lib.aa_properties import (
-    rel_asa,
     aa_character_ic,
     aa_character_protorp,
+    rel_asa,
 )
-import pytest
 
 
 def test_properties():

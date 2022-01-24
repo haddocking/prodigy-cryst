@@ -27,4 +27,4 @@ jobs:
           pip install virtualenv tox
 
       - name: lint
-        run: tox -e flake8,black
+        run: tox -e flake8,black,isort
