@@ -11,14 +11,21 @@ from tests import DATA_FOLDER
 
 @pytest.fixture
 def parsed_structure():
-    pdb_path = Path(DATA_FOLDER, "1ppe.pdb")
+    pdb_path = Path(DATA_FOLDER, "complex.pdb")
+    s, _, _ = parse_structure(pdb_path)
+    return s
+
+
+@pytest.fixture
+def parsed_structure_w_gaps():
+    pdb_path = Path(DATA_FOLDER, "complex_w_gaps.pdb")
     s, _, _ = parse_structure(pdb_path)
     return s
 
 
 @pytest.fixture
 def contact_list():
-    pdb_path = Path(DATA_FOLDER, "1ppe.pdb")
+    pdb_path = Path(DATA_FOLDER, "complex.pdb")
     s, _, _ = parse_structure(pdb_path)
     return [(s[0]["I"][1], s[0]["E"][20])]
 
@@ -26,6 +33,11 @@ def contact_list():
 @pytest.fixture
 def prodigyxtal(parsed_structure):
     return ProdigyCrystal(parsed_structure)
+
+
+@pytest.fixture
+def prodigyxtal_w_gaps(parsed_structure_w_gaps):
+    return ProdigyCrystal(parsed_structure_w_gaps)
 
 
 def test_calculate_ic(parsed_structure):
@@ -52,11 +64,15 @@ def test_analyse_contacts(contact_list):
     assert bins["ARG"] == 1
 
 
-def test_prodigycrystal_predict(prodigyxtal):
+def test_prodigycrystal_predict(prodigyxtal, prodigyxtal_w_gaps):
     """Test the prediction."""
     prodigyxtal.predict()
 
     assert prodigyxtal.predicted_class == ("BIO", 0.804, 0.196)
+
+    prodigyxtal_w_gaps.predict()
+
+    assert prodigyxtal_w_gaps.predicted_class == ("BIO", 0.68, 0.32)
 
 
 def test_prodigycrystal_as_dict(prodigyxtal):
@@ -65,7 +81,7 @@ def test_prodigycrystal_as_dict(prodigyxtal):
     prodigyxtal.predicted_class = ("BIO", 0.804, 0.196)
     observed_dic = prodigyxtal.as_dict()
     expected_dic = {
-        "structure": "1ppe",
+        "structure": "complex",
         "selection": ["E", "I"],
         "ICs": 0,
         "link_density": 0.42,
