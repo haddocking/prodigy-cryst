@@ -24,7 +24,7 @@ from pathlib import Path
 try:
     from Bio.PDB import NeighborSearch
 except ImportError as e:
-    print("[!] The interface classifier tool requires Biopython", file=sys.stderr)
+    logging.error("[!] The interface classifier tool requires Biopython")
     raise ImportError(e)
 
 from prodigy_cryst.lib import aa_properties
@@ -324,7 +324,7 @@ if __name__ == "__main__":
 
     # setup logging
     log_level = logging.ERROR if cmd.quiet else logging.INFO
-    logging.basicConfig(level=log_level, stream=sys.stdout, format="%(message)s")
+    logging.basicConfig(level=log_level, format="%(message)s")
     logger = logging.getLogger("Prodigy")
 
     struct_path = _check_path(cmd.structf)
