@@ -1,38 +1,32 @@
-name: unittests py36
+name: unittests
 
 on: push
 
 jobs:
   build:
-    runs-on: ${{ matrix.platform }}
-    strategy:
-      matrix:
-        platform: [ubuntu-latest, macos-latest]
-        python-version: ["3.9.16"]
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2.2.2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-python@v2.2.2
+        with:
+          python-version: 3.9
 
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt coverage pytest pytest-cov hypothesis
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt coverage pytest pytest-cov hypothesis
+      - name: Test
+        run: |
+          pytest --cov --cov-report=term-missing --cov-append --cov-config=.coveragerc -vv --hypothesis-show-statistics .
 
-    - name: Test
-      run: |
-        pytest --cov --cov-report=term-missing --cov-append --cov-config=.coveragerc -vv --hypothesis-show-statistics .
-
-    # from https://github.com/codecov/codecov-action
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        files: ./coverage.xml
-        fail_ci_if_error: false
-        verbose: true
+      # from https://github.com/codecov/codecov-action
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+          verbose: true
