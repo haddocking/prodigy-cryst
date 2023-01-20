@@ -3,7 +3,7 @@ name: unittests
 on: push
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,11 +17,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt coverage pytest pytest-cov hypothesis
+          pip install -r requirements.txt coverage pytest pytest-cov hypothesis --use-pep517
 
       - name: Test
         run: |
           pytest --cov --cov-report=term-missing --cov-append --cov-config=.coveragerc -vv --hypothesis-show-statistics .
+          coverage xml
 
       # from https://github.com/codecov/codecov-action
       - name: Upload coverage to Codecov
