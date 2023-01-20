@@ -1,3 +1,6 @@
+[![unittests py36](https://github.com/haddocking/prodigy-cryst/actions/workflows/py36.yml/badge.svg)](https://github.com/haddocking/prodigy-cryst/actions/workflows/py36.yml)
+[![codecov](https://codecov.io/gh/haddocking/prodigy-cryst/branch/master/graph/badge.svg?token=KCGiAqKRnu)](https://codecov.io/gh/haddocking/prodigy-cryst)
+
 # Interface Classifier  
 Collection of scripts to predict whether an interface in a protein-protein 
 complex is biological or crystallographic from its atomic coordinates.
@@ -8,12 +11,12 @@ git clone http://github.com/biopython/biopython.git
 cd biopython
 sudo python setup.py install # Alternatively, install locally but fix $PYTHONPATH
 
-wget http://freesasa.github.io/freesasa-1.0.tar.gz
+wget https://github.com/mittinatten/freesasa/releases/download/1.0/freesasa-1.0.tar.gz
 tar -xzvf freesasa-1.0.tar.gz
 cd freesasa-1.0
 ./configure && make && make install
 
-pip3 install scikit-learn
+pip3 install scikit-learn==0.22
 
 git clone http://github.com/haddocking/interface-classifier
 
