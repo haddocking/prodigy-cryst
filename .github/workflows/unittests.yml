@@ -17,7 +17,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt coverage pytest pytest-cov hypothesis --use-pep517
+          pip install -r requirements.txt coverage pytest pytest-cov hypothesis
 
       - name: Test
         run: |
