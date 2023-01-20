@@ -278,7 +278,7 @@ class ProdigyCrystal:
             handle.close()
 
 
-if __name__ == "__main__":
+def main():
 
     try:
         import argparse
@@ -325,7 +325,7 @@ if __name__ == "__main__":
     # setup logging
     log_level = logging.ERROR if cmd.quiet else logging.INFO
     logging.basicConfig(level=log_level, format="%(message)s")
-    logger = logging.getLogger("Prodigy")
+    # logger = logging.getLogger("Prodigy")
 
     struct_path = _check_path(cmd.structf)
 
