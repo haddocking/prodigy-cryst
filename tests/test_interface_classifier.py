@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 
 import pytest
 
-from interface_classifier import ProdigyCrystal, analyse_contacts, calculate_ic
+from prodigy_cryst.interface_classifier import ProdigyCrystal, analyse_contacts, calculate_ic
 from prodigy_cryst.lib.parsers import parse_structure
 from tests import DATA_FOLDER
 

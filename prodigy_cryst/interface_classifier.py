@@ -196,7 +196,7 @@ class ProdigyCrystal:
         #     + " ".join(features)
         # ).read()
         model_f = Path(
-            Path(__file__).resolve().parent, "prodigy_cryst/data/classifier.sav"
+            Path(__file__).resolve().parent.parent, "prodigy_cryst/data/classifier.sav"
         )
         # Calling this will raise some warning about modules that will be deprecated
         with warnings.catch_warnings():
