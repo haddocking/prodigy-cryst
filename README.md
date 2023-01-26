@@ -1,5 +1,6 @@
 [![unittests](https://github.com/haddocking/prodigy-cryst/actions/workflows/unittests.yml/badge.svg)](https://github.com/haddocking/prodigy-cryst/actions/workflows/unittests.yml)
-[![codecov](https://codecov.io/gh/haddocking/prodigy-cryst/branch/master/graph/badge.svg?token=KCGiAqKRnu)](https://codecov.io/gh/haddocking/prodigy-cryst)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f129d451ec04c4e9529a6eb28457619)](https://www.codacy.com/gh/haddocking/prodigy-cryst/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=haddocking/prodigy-cryst&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/4f129d451ec04c4e9529a6eb28457619)](https://www.codacy.com/gh/haddocking/prodigy-cryst/dashboard?utm_source=github.com&utm_medium=referral&utm_content=haddocking/prodigy-cryst&utm_campaign=Badge_Coverage)
 
 # PRODIGY-cryst
 
