@@ -24,16 +24,14 @@ jobs:
           pytest --cov --cov-report=term-missing --cov-append -vv --hypothesis-show-statistics .
           coverage xml
 
-      # from https://github.com/codecov/codecov-action
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+      - name: Run codacy-coverage-reporter
+        uses: codacy/codacy-coverage-reporter-action@v1
         with:
-          files: ./coverage.xml
-          fail_ci_if_error: false
-          verbose: true
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage.xml
 
-      # - name: Run codacy-coverage-reporter
-      #   uses: codacy/codacy-coverage-reporter-action@v1
-      #   with:
-      #     project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-      #     coverage-reports: coverage.xml
+      - uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
