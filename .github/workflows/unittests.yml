@@ -11,9 +11,14 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v2.2.2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
+          auto-update-conda: true
           python-version: 3.9
+
+      # - uses: actions/setup-python@v2.2.2
+      #   with:
+      #     python-version: 3.9
 
       - name: Install dependencies
         run: |
