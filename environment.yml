@@ -11,5 +11,6 @@ dependencies:
   - pytest
   - pytest-cov
   - hypothesis
+  - python>=3.6
   - pip:
       - freesasa==2.1.0
