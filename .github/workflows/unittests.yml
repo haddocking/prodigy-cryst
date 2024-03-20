@@ -15,6 +15,13 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Add system dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential
+          apt-get clean
+          rm -rf /var/lib/apt/lists/*
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt coverage pytest pytest-cov hypothesis
