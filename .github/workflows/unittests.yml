@@ -15,8 +15,7 @@ jobs:
         with:
           auto-update-conda: true
           python-version: 3.9
-          auto-activate-base: true
-          activate-environment: ""
+          activate-environment: test
 
       # - uses: actions/setup-python@v2.2.2
       #   with:
