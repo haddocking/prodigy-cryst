@@ -29,9 +29,9 @@ jobs:
 
       - name: run tests
         run: |
-          docker exec test-anaconda-container pytest --cov --cov-report=term-missing --cov-append -vv --hypothesis-show-statistics workspace/
+          docker exec test-anaconda-container pytest --cov --cov-report xml:workspace/coverage.xml --cov-append -vv --hypothesis-show-statistics workspace/
 
       - uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: coverage.xml
+          coverage-reports: ${{ github.workspace }}/coverage.xml
