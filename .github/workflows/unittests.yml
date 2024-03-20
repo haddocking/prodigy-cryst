@@ -25,11 +25,11 @@ jobs:
 
       - name: install python dependencies
         run: |
-          docker exec my-anaconda-container pip install -r workspace/requirements.txt coverage pytest pytest-cov hypothesis
+          docker exec test-anaconda-container pip install -r workspace/requirements.txt coverage pytest pytest-cov hypothesis
 
       - name: run tests
         run: |
-          docker exec my-anaconda-container pytest --cov --cov-report=term-missing --cov-append -vv --hypothesis-show-statistics workspace/
+          docker exec test-anaconda-container pytest --cov --cov-report=term-missing --cov-append -vv --hypothesis-show-statistics workspace/
 
       # - name: Run codacy-coverage-reporter
       #   uses: codacy/codacy-coverage-reporter-action@v1
