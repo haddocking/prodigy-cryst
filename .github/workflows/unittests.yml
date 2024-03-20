@@ -7,31 +7,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v2.2.2
-        with:
-          python-version: 3.9
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Install dependencies
+      - name: pull anaconda3:2022.10 image
+        run: docker pull continuumio/anaconda3:2022.10
+
+      - name: run the container
         run: |
-          pip install -r requirements.txt coverage pytest pytest-cov hypothesis
+          docker run --name test-anaconda-container -d -v ${{ github.workspace }}:/workspace continuumio/anaconda3:2022.10 tail -f /dev/null
 
-      - name: Test
+      - name: install system dependencies
         run: |
-          pytest --cov --cov-report=term-missing --cov-append -vv --hypothesis-show-statistics .
-          coverage xml
+          docker exec test-anaconda-container apt-get update
+          docker exec test-anaconda-container apt-get install -y --no-install-recommends build-essential
 
-      - name: Run codacy-coverage-reporter
-        uses: codacy/codacy-coverage-reporter-action@v1
+      - name: install python dependencies
+        run: |
+          docker exec test-anaconda-container pip install -r workspace/requirements.txt coverage pytest pytest-cov hypothesis
+
+      - name: run tests
+        run: |
+          docker exec test-anaconda-container pytest --cov --cov-report xml:workspace/coverage.xml --cov-append -vv --hypothesis-show-statistics workspace/
+
+      - uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: coverage.xml
-
-      - uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
+          coverage-reports: ./coverage.xml
