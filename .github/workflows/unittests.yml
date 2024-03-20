@@ -17,10 +17,10 @@ jobs:
 
       - name: Add system dependencies
         run: |
-          apt-get update
-          apt-get install -y --no-install-recommends build-essential
-          apt-get clean
-          rm -rf /var/lib/apt/lists/*
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
 
       - name: Install dependencies
         run: |
