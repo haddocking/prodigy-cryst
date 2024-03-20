@@ -5,21 +5,21 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
 
-      - uses: s-weigand/setup-conda@v1
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          update-conda: true
+          activate-environment: prodigy-cryst
+          environment-file: environment.yml
           python-version: 3.9
-          conda-channels: anaconda, conda-forge
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt coverage pytest pytest-cov hypothesis
+          auto-activate-base: false
 
       - name: Test
         run: |
