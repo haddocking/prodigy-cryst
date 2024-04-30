@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prodigy-cryst"
-version = "1.0.1"
+version = "1.0.0"
 description = "Predicts if a protein complex interface is biological or crystallographic."
 authors = ["BonvinLab <bonvinlab.support@uu.nl>"]
 readme = "README.md"
@@ -15,7 +15,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.9"
 scikit-learn = "0.22"
 biopython = "^1.79"
 numpy = "~1.20"
