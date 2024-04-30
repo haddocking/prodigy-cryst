@@ -9,7 +9,7 @@ from prodigy_cryst.interface_classifier import (
     analyse_contacts,
     calculate_ic,
 )
-from prodigy_cryst.lib.parsers import parse_structure
+from prodigy_cryst.modules.parsers import parse_structure
 from tests import DATA_FOLDER
 
 

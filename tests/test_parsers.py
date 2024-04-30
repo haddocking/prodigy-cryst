@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from Bio.PDB.Structure import Structure
 
-from prodigy_cryst.lib.parsers import parse_structure
+from prodigy_cryst.modules.parsers import parse_structure
 
 from . import DATA_FOLDER
 
