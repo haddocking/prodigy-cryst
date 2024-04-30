@@ -1,6 +1,6 @@
 import pytest
 
-from prodigy_cryst.lib.aa_properties import (
+from prodigy_cryst.modules.aa_properties import (
     aa_character_ic,
     aa_character_protorp,
     rel_asa,

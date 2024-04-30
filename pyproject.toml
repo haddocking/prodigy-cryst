@@ -29,6 +29,12 @@ hypothesis = "^6.100.2"
 [tool.poetry.scripts]
 prodigy_cryst = "prodigy_cryst.interface_classifier:main"
 
+[tool.setuptools]
+include-package-data = true
+packages = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
 
 [build-system]
 requires = ["poetry-core"]

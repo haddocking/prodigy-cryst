@@ -27,11 +27,11 @@ except ImportError as e:
     logging.error("[!] The interface classifier tool requires Biopython")
     raise ImportError(e)
 
-from prodigy_cryst.lib import aa_properties
-from prodigy_cryst.lib.parsers import parse_structure
+from prodigy_cryst.modules import aa_properties
+from prodigy_cryst.modules.parsers import parse_structure
 
 # from prodigy_cryst.lib.freesasa import execute_freesasa
-from prodigy_cryst.lib.utils import _check_path
+from prodigy_cryst.modules.utils import _check_path
 
 
 def calculate_ic(structure, d_cutoff=5.0, selection=None):
@@ -99,7 +99,7 @@ def analyse_contacts(contact_list):
     }
 
     _data = aa_properties.aa_character_ic
-    for (res_i, res_j) in contact_list:
+    for res_i, res_j in contact_list:
         contact_type = (_data.get(res_i.resname), _data.get(res_j.resname))
         contact_type = "".join(sorted(contact_type))
         bins[contact_type] += 1
