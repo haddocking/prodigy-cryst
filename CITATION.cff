@@ -1,0 +1,32 @@
+# YAML 1.2
+# Metadata for citation of this software according to the CFF format (https://citation-file-format.github.io/)
+cff-version: 1.0.3
+message: If you use this software, please cite it using these metadata.
+# FIXME title as repository name might not be the best name, please make human readable
+title: 'haddocking/prodigy-cryst: v0.2.0'
+doi: 10.5281/zenodo.10844296
+# FIXME splitting of full names is error prone, please check if given/family name are correct
+authors:
+- given-names: Rodrigo
+  family-names: Honorato
+  name-particle: Vargas
+  affiliation: '@UtrechtUniversity'
+- given-names: Brian
+  family-names: Jimenez
+  affiliation: '@zymvol'
+- given-names: Anna
+  family-names: ''
+  affiliation:
+- given-names: Alexandre
+  family-names: Bonvin
+  affiliation: '@UtrechtUniversity'
+- given-names: Katarina
+  family-names: Elez
+  affiliation:
+- given-names: genjerator
+  family-names: ''
+  affiliation:
+version: 0.2.0
+date-released: 2024-03-20
+repository-code: https://github.com/haddocking/prodigy-cryst
+license: cc-by-4.0
