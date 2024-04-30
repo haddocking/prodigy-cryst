@@ -6,7 +6,7 @@
 [![ci](https://github.com/haddocking/prodigy-cryst/actions/workflows/ci.yml/badge.svg)](https://github.com/haddocking/prodigy-cryst/actions/workflows/ci.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4f129d451ec04c4e9529a6eb28457619)](https://www.codacy.com/gh/haddocking/prodigy-cryst/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=haddocking/prodigy-cryst&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/4f129d451ec04c4e9529a6eb28457619)](https://www.codacy.com/gh/haddocking/prodigy-cryst/dashboard?utm_source=github.com&utm_medium=referral&utm_content=haddocking/prodigy-cryst&utm_campaign=Badge_Coverage)
-[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8B%20%20%E2%97%8B-orange)](https://fair-software.eu)
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 
 Collection of scripts to predict whether an interface in a protein-protein complex is biological or crystallographic from its atomic coordinates.
 
