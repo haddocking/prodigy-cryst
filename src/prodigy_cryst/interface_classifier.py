@@ -14,8 +14,6 @@ from __future__ import division, print_function
 __author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues", "Brian Jimenez"]
 
 import logging
-
-# import os
 import sys
 
 try:
@@ -186,13 +184,6 @@ class ProdigyCrystal:
             ]
         ]
         features.append(str(len(self.ic_network) / max_contacts))
-        # Q: Why is this calling classify?
-        # base_path = os.path.dirname(os.path.realpath(__file__))
-        # prediction = os.popen(
-        #     os.path.join(base_path, "prodigy_cryst", "classify.py")
-        #     + " "
-        #     + " ".join(features)
-        # ).read()
         self.predicted_class = predict(features)
 
     def as_dict(self):

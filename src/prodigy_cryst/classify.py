@@ -31,12 +31,9 @@ def predict(features):
     proba = np.zeros(2)
     for node in FOREST["roots"]:
         while left[node] != -1:
-            if x[feature[node]] <= threshold[node]:
-                node = left[node]
-            else:
-                node = right[node]
+            node = left[node] if x[feature[node]] <= threshold[node] else right[node]
         proba += FOREST["proba"][node]
-    proba = list(proba / len(FOREST["roots"]))
+    proba = (proba / len(FOREST["roots"])).tolist()
     return ["BIO", "XTAL"][proba.index(max(proba))], proba[0], proba[1]
 
 
