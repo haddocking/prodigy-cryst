@@ -32,7 +32,6 @@ def test_parse_structure():
 
 def test_parse_structure_forcefield_resnames(tmp_path):
     """Force-field names of standard residues are read as the standard residue."""
-
     pdb_path = Path(tmp_path, "complex_hsd.pdb")
     pdb = Path(DATA_FOLDER, "complex.pdb").read_text()
     pdb_path.write_text(pdb.replace(" HIS ", " HSD "))
