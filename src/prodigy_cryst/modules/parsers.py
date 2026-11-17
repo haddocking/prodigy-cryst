@@ -21,6 +21,21 @@ except ImportError as e:
     logging.error("[!] The interface classifier tool requires Biopython")
     raise ImportError(e)
 
+# Force-field (CHARMM, AMBER) names of standard residues
+FORCEFIELD_RESNAMES = {
+    "HSD": "HIS",
+    "HSE": "HIS",
+    "HSP": "HIS",
+    "HID": "HIS",
+    "HIE": "HIS",
+    "HIP": "HIS",
+    "CYX": "CYS",
+    "CYM": "CYS",
+    "ASH": "ASP",
+    "GLH": "GLU",
+    "LYN": "LYS",
+}
+
 
 def parse_structure(path):
     """
@@ -81,6 +96,7 @@ def parse_structure(path):
         return r.id[0][0] == "W" or r.id[0][0] == "H"
 
     for res in res_list:
+        res.resname = FORCEFIELD_RESNAMES.get(res.resname, res.resname)
         if _ignore(res):
             chain = res.parent
             chain.detach_child(res.id)
