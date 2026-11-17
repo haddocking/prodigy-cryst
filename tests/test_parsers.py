@@ -28,3 +28,17 @@ def test_parse_structure():
     assert isinstance(s_gaps, Structure)
     assert n_chains_gaps == 2
     assert n_res_gaps == 247
+
+
+def test_parse_structure_forcefield_resnames(tmp_path):
+    """Force-field names of standard residues are read as the standard residue."""
+
+    pdb_path = Path(tmp_path, "complex_hsd.pdb")
+    pdb = Path(DATA_FOLDER, "complex.pdb").read_text()
+    pdb_path.write_text(pdb.replace(" HIS ", " HSD "))
+
+    s, _, _ = parse_structure(pdb_path)
+
+    resnames = [r.resname for r in s.get_residues()]
+    assert "HSD" not in resnames
+    assert "HIS" in resnames
