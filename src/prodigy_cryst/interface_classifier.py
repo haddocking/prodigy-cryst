@@ -14,12 +14,7 @@ from __future__ import division, print_function
 __author__ = ["Katarina Elez", "Anna Vangone", "Joao Rodrigues", "Brian Jimenez"]
 
 import logging
-import pickle
-
-# import os
 import sys
-import warnings
-from pathlib import Path
 
 try:
     from Bio.PDB import NeighborSearch
@@ -27,6 +22,7 @@ except ImportError as e:
     logging.error("[!] The interface classifier tool requires Biopython")
     raise ImportError(e)
 
+from prodigy_cryst.classify import predict
 from prodigy_cryst.modules import aa_properties
 from prodigy_cryst.modules.parsers import parse_structure
 
@@ -188,24 +184,7 @@ class ProdigyCrystal:
             ]
         ]
         features.append(str(len(self.ic_network) / max_contacts))
-        # Q: Why is this calling classify?
-        # base_path = os.path.dirname(os.path.realpath(__file__))
-        # prediction = os.popen(
-        #     os.path.join(base_path, "prodigy_cryst", "classify.py")
-        #     + " "
-        #     + " ".join(features)
-        # ).read()
-        model_f = Path(
-            Path(__file__).resolve().parent.parent, "prodigy_cryst/data/classifier.sav"
-        )
-        # Calling this will raise some warning about modules that will be deprecated
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            with open(model_f, "rb") as fh:
-                model = pickle.load(fh)
-            proba = list(model.predict_proba([features])[0])
-            prediction = ["BIO", "XTAL"][proba.index(max(proba))], proba[0], proba[1]
-        self.predicted_class = prediction
+        self.predicted_class = predict(features)
 
     def as_dict(self):
         return_dict = {
